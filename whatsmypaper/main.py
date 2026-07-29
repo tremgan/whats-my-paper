@@ -3,7 +3,7 @@ from pathlib import Path
 from name_classify import numeric_percentage_strategy
 from rich import print
 from typing import Callable
-from whats_my_paper_repository import WMPRepository
+import whats_my_paper
 from caseconverter import kebabcase
 
 app = typer.Typer()
@@ -27,16 +27,18 @@ def scan(path: Path):
             print(name)
 
 @app.command()
-def rename(path: Path):
-
-    title = WMPRepository().extract_title(path)
-    if not title: 
-        return ValueError(f'No title found for {path}')
-
+def rename(path: Path, yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation")):
+    title = whats_my_paper.extract_title(path)
+    if not title:
+        raise ValueError(f"No title found for {path}")
+    
     title = kebabcase(title)
 
-    
-    WMPRepository().rename(path=path, name=title)
+    if not yes and not typer.confirm(f"Rename {path.name} -> {title}{path.suffix}?"):
+        typer.echo("Aborted.")
+        raise typer.Abort()
+
+    whats_my_paper.rename(path=path, name=title)
 
 if __name__ == "__main__":
     app()

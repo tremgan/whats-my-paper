@@ -29,7 +29,7 @@ def scan(path: Path):
 @app.command()
 def rename(
     path: Path,
-    dry_run: bool = typer.Option(False, "--dry-run", help="Show what would be renamed, without renaming"),
+    preview: bool = typer.Option(False, "--preview", help="Show what would be renamed, without renaming"),
 ):
     """
     Rename a PDF to its title, or every auto-generated-looking PDF in a directory.
@@ -62,7 +62,7 @@ def rename(
         new_path = whats_my_paper.unique_path(new_path, claimed)
         claimed.add(new_path)
 
-        if not dry_run:
+        if not preview:
             whats_my_paper.rename(path=pdf_path, new_path=new_path)
 
         print(f"{pdf_path.name} [dim]->[/dim] {new_path.name}")

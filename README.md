@@ -83,7 +83,7 @@ whats-my-paper scan ~/Downloads
 Preview the renames without touching anything:
 
 ```sh
-whats-my-paper rename ~/Downloads --dry-run
+whats-my-paper rename ~/Downloads --preview
 ```
 
 Do it:

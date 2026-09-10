@@ -1,2 +1,18 @@
+# the sample PDFs are big and not mine to redistribute
 /examples
-.venv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+build/
+dist/
+*.egg-info/
+
+# tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# macOS
+.DS_Store

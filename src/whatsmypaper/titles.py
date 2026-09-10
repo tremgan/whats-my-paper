@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Optional
 
 from pypdf import PdfReader
+from rich import print
 
 # guards against path.rename() failing with "File name too long" when the parse
 # fallback returns a paragraph instead of a title
@@ -43,7 +44,16 @@ def get_pdf_title_from_metadata(path: Path) -> Optional[str]:
 
 def get_pdf_title_from_parse(path: Path) -> Optional[str]:
     # imported here so that scan, --help and the metadata path don't pay for it
+    from docling.datamodel.pipeline_options import LayoutOptions
     from docling.document_converter import DocumentConverter
+    from huggingface_hub.constants import HF_HUB_CACHE
+
+    # docling pulls its weights from the Hugging Face hub cache on first use
+    cache_dir = Path(HF_HUB_CACHE)
+    repo_id = LayoutOptions().model_spec.repo_id
+    if not (cache_dir / f"models--{repo_id.replace('/', '--')}").exists():
+        print(f"[yellow]Downloading docling model weights[/yellow] [dim]->[/dim] {cache_dir}")
+        print("[dim]This happens once; later runs reuse the cache.[/dim]")
 
     converter = DocumentConverter()
     try:

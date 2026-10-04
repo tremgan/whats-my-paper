@@ -131,3 +131,14 @@ def test_renamed_files_are_legal_on_windows(make_pdf, tmp_path, title):
     renamed = next(p for p in tmp_path.glob("*.pdf") if p.name != "1706.03762v7.pdf")
     assert not (set(renamed.stem) & WINDOWS_ILLEGAL)
     assert not renamed.stem.endswith((".", " "))
+
+
+@pytest.mark.parametrize("title", ["CON", "Nul", "com1"])
+def test_a_title_that_is_a_windows_device_name_is_renamed_safely(make_pdf, tmp_path, title):
+    """con.pdf cannot be created on Windows, so the rename must not produce one."""
+    make_pdf("1706.03762v7.pdf", title=title)
+
+    result = runner.invoke(app, ["rename", str(tmp_path)])
+
+    assert result.exit_code == 0
+    assert (tmp_path / f"{title.lower()}_.pdf").exists()

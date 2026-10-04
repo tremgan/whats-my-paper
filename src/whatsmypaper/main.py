@@ -69,6 +69,7 @@ def rename(
         # lowercased first so caseconverter doesn't treat the capital in a name like
         # scDiffusion or AlphaFold as a word boundary and split it
         name = kebabcase(title.lower())[:MAX_NAME_LENGTH].strip('-')
+        name = whats_my_paper.safe_stem(name)
         new_path = pdf_path.with_name(f"{name}{pdf_path.suffix}")
 
         if not name or new_path == pdf_path:

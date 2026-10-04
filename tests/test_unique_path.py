@@ -1,4 +1,6 @@
-from whatsmypaper.whats_my_paper import unique_path
+import pytest
+
+from whatsmypaper.whats_my_paper import safe_stem, unique_path
 
 
 def test_leaves_a_free_path_alone(tmp_path):
@@ -29,3 +31,13 @@ def test_keeps_the_suffix(tmp_path):
     path = tmp_path / "paper.pdf"
     path.touch()
     assert unique_path(path).suffix == ".pdf"
+
+
+@pytest.mark.parametrize("reserved", ["con", "CON", "Nul", "prn", "aux", "com1", "lpt9"])
+def test_reserved_windows_device_names_are_escaped(reserved):
+    assert safe_stem(reserved) == f"{reserved}_"
+
+
+@pytest.mark.parametrize("ordinary", ["attention", "com", "com10", "console", "lpt", "nullable"])
+def test_ordinary_names_are_untouched(ordinary):
+    assert safe_stem(ordinary) == ordinary

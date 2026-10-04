@@ -39,6 +39,11 @@ jobs:
       - name: whats-my-paper --help
         run: whats-my-paper --help
 
+      - name: whats-my-paper --version
+        run: |
+          test "$(whats-my-paper --version)" = "$(uv version --short)"
+          echo "version flag matches pyproject"
+
       # A PDF with its title in the metadata, so the smoke test stays on the
       # metadata path and never downloads docling's half-gigabyte of weights.
       - name: Rename a PDF

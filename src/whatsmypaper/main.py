@@ -1,3 +1,4 @@
+import importlib.metadata
 import typer
 from pathlib import Path
 from rich import print
@@ -8,6 +9,21 @@ from caseconverter import kebabcase
 
 app = typer.Typer()
 
+
+def version_callback(value: bool):
+    if value:
+        print(importlib.metadata.version("whats-my-paper"))
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: bool = typer.Option(
+        None, "--version", callback=version_callback, is_eager=True,
+        help="Show the version and exit.",
+    ),
+):
+    pass
 
 
 strategy: Callable[[str], bool] = numeric_percentage_strategy

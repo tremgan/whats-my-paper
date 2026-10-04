@@ -1,5 +1,8 @@
 # whats-my-paper
 
+[![PyPI](https://img.shields.io/pypi/v/whats-my-paper.svg)](https://pypi.org/project/whats-my-paper/)
+[![CI](https://github.com/tremgan/whats-my-paper/actions/workflows/ci.yml/badge.svg)](https://github.com/tremgan/whats-my-paper/actions/workflows/ci.yml)
+
 I find it really annoying that downloaded articles from publishers will have some randomly generated names for the download which makes it a nightmare to find them after downloading (im too lazy to rename them)
 
 So this renames them to their actual title:
@@ -65,6 +68,13 @@ runs your working copy without installing anything:
 ```sh
 uv sync
 uv run whats-my-paper scan ~/Downloads
+```
+
+The tests run the same way, and are quick — they build their own PDFs and stay on the metadata
+path, so they never pull docling's weights:
+
+```sh
+uv run pytest
 ```
 
 ### A note on size

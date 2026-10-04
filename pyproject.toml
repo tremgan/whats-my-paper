@@ -25,6 +25,9 @@ dependencies = [
 ]
 
 
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
 [project.urls]
 Homepage = "https://github.com/tremgan/whats-my-paper"
 Repository = "https://github.com/tremgan/whats-my-paper"

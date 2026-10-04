@@ -19,10 +19,10 @@ Needs [uv](https://docs.astral.sh/uv/) and Python 3.12 or newer. If you don't ha
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Then install straight from GitHub — no need to clone:
+Then:
 
 ```sh
-uv tool install git+https://github.com/tremgan/whats-my-paper
+uv tool install whats-my-paper
 ```
 
 That puts a `whats-my-paper` command on your PATH, in its own isolated environment, so it
@@ -41,12 +41,20 @@ uv tool upgrade whats-my-paper
 uv tool uninstall whats-my-paper
 ```
 
-### From a clone
+Or with pip, if you'd rather not use uv:
 
-If you've cloned the repo, install it the same way from the project root:
+```sh
+pip install whats-my-paper
+```
+
+### From source
+
+From a clone, install it the same way from the project root, or straight from GitHub without
+cloning:
 
 ```sh
 uv tool install .
+uv tool install git+https://github.com/tremgan/whats-my-paper
 ```
 
 ### Working on it

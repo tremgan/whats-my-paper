@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  smoke:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Build
+        run: uv build
+
+      - name: Install the built wheel
+        run: |
+          uv tool install dist/*.whl
+          # the tool bin dir isn't on PATH by default on the Windows runners
+          uv tool dir --bin >> "$GITHUB_PATH"
+
+      - name: whats-my-paper --help
+        run: whats-my-paper --help
+
+      # A PDF with its title in the metadata, so the smoke test stays on the
+      # metadata path and never downloads docling's half-gigabyte of weights.
+      - name: Rename a PDF
+        run: |
+          uv run --with pypdf python - <<'PY'
+          from pypdf import PdfWriter
+          w = PdfWriter()
+          w.add_blank_page(width=200, height=200)
+          w.add_metadata({"/Title": "Attention Is All You Need"})
+          with open("1706.03762v7.pdf", "wb") as f:
+              w.write(f)
+          PY
+          whats-my-paper scan .
+          whats-my-paper rename .
+          test -f attention-is-all-you-need.pdf
+          echo "renamed correctly"
